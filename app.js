@@ -76,44 +76,62 @@ let state = {
     activeTab: "customer"     // "customer", "merchant", "admin", "ai-chat"
 };
 
-// --- Storage API ---
-function loadStateFromStorage() {
-    try {
-        if (!localStorage.getItem("zalo_users")) {
-            localStorage.setItem("zalo_users", JSON.stringify(DEFAULT_USERS));
-            localStorage.setItem("zalo_stores", JSON.stringify(DEFAULT_STORES));
-            localStorage.setItem("zalo_products", JSON.stringify(DEFAULT_PRODUCTS));
-            localStorage.setItem("zalo_orders", JSON.stringify(DEFAULT_ORDERS));
-            localStorage.setItem("zalo_order_items", JSON.stringify(DEFAULT_ORDER_ITEMS));
-            localStorage.setItem("zalo_complaints", JSON.stringify(DEFAULT_COMPLAINTS));
-            localStorage.setItem("zalo_subs", JSON.stringify(DEFAULT_SUBS));
-            localStorage.setItem("zalo_verifications", JSON.stringify(DEFAULT_VERIFICATIONS));
-            localStorage.setItem("zalo_audit", JSON.stringify(DEFAULT_AUDIT));
-            localStorage.setItem("zalo_notifs", JSON.stringify(DEFAULT_NOTIFS));
-        }
-
-        state.users = JSON.parse(localStorage.getItem("zalo_users"));
-        state.stores = JSON.parse(localStorage.getItem("zalo_stores"));
-        state.products = JSON.parse(localStorage.getItem("zalo_products"));
-        state.orders = JSON.parse(localStorage.getItem("zalo_orders"));
-        state.orderItems = JSON.parse(localStorage.getItem("zalo_order_items"));
-        state.complaints = JSON.parse(localStorage.getItem("zalo_complaints"));
-        state.subs = JSON.parse(localStorage.getItem("zalo_subs"));
-        state.verifications = JSON.parse(localStorage.getItem("zalo_verifications") || "[]");
-        state.auditLogs = JSON.parse(localStorage.getItem("zalo_audit"));
-        state.notifs = JSON.parse(localStorage.getItem("zalo_notifs"));
-
-        // Set Default Active User: customer (Hadi)
-        state.currentUser = state.users.find(u => u.email === "hadi47hadi58@gmail.com") || state.users[0];
-        state.currentRole = state.currentUser.role;
-        
-        // Load cart
-        const savedCart = localStorage.getItem("zalo_cart_" + state.currentUser.id);
-        state.cart = savedCart ? JSON.parse(savedCart) : {};
-
-    } catch (e) {
-        console.error("Failed to load local storage state", e);
+// --- Firebase Integration API ---
+async function loadStateFromFirebase() {
+    if (!window.firebaseDB) {
+        console.log("Waiting for Firebase to initialize...");
+        setTimeout(loadStateFromFirebase, 500);
+        return;
     }
+
+    const { collection, getDocs, onSnapshot } = window.firestoreTools;
+    const db = window.firebaseDB;
+
+    // Real-time listeners for core collections
+    const collections = ['users', 'shops', 'products', 'orders', 'complaints', 'subscriptions', 'audit_logs', 'notifications'];
+    
+    collections.forEach(colName => {
+        onSnapshot(collection(db, colName), (snapshot) => {
+            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            // Map Firestore collection names to internal state keys
+            const stateKeyMap = {
+                'shops': 'stores',
+                'audit_logs': 'auditLogs',
+                'notifications': 'notifs',
+                'subscriptions': 'subs'
+            };
+            
+            const stateKey = stateKeyMap[colName] || colName;
+            state[stateKey] = data;
+
+            // Trigger UI updates based on the active tab
+            if (state.activeTab === "customer") {
+                renderProductsGrid();
+                renderCustomerOrders();
+            } else if (state.activeTab === "merchant") {
+                renderMerchantDashboard();
+            } else if (state.activeTab === "admin") {
+                renderAdminDashboard();
+            }
+            
+            updateNotificationBadge();
+        });
+    });
+
+    // Set Initial User (Simulated for now, can be linked to Firebase Auth later)
+    state.currentUser = DEFAULT_USERS[0]; 
+    state.currentRole = state.currentUser.role;
+    
+    const savedCart = localStorage.getItem("zalo_cart_" + state.currentUser.id);
+    state.cart = savedCart ? JSON.parse(savedCart) : {};
+    
+    console.log("Firebase sync active 🚀");
+}
+
+// Override original loadStateFromStorage
+function loadStateFromStorage() {
+    loadStateFromFirebase();
 }
 
 function saveToLocalStorage(key, arrayData) {

@@ -12,6 +12,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJ3T-jWd_nj3FYCtzewRl-d1yimGtsryc",
+            authDomain: "zalo-smart.firebaseapp.com",
+            projectId: "zalo-smart",
+            storageBucket: "zalo-smart.firebasestorage.app",
+            messagingSenderId: "430326151788",
+            appId: "1:430326151788:web:e4f94437946221429f3649",
+            measurementId: "G-HVX2X346E7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Make Firebase globally available for app.js
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+        window.firestoreTools = { collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, setDoc, deleteDoc };
+    </script>
+
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
