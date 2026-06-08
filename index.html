@@ -4,20 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZaLo Smart - السوق الجزائري الذكي</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tajawal Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBJ3T-jWd_nj3FYCtzewRl-d1yimGtsryc",
@@ -36,143 +30,67 @@
         window.firebaseDB = db;
         window.firebaseAuth = auth;
         window.firestoreTools = { collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc };
-        window.firebaseAuthTools = { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut };
+        window.firebaseAuthTools = { onAuthStateChanged, signInWithEmailAndPassword, signOut };
     </script>
 
     <style>
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #0b1528;
-            color: #f3f4f6;
-            overflow-x: hidden;
-        }
-        .zalo-gradient {
-            background: linear-gradient(135deg, #0b1528 0%, #1e293b 100%);
-        }
+        body { font-family: 'Tajawal', sans-serif; background-color: #0b1528; color: #f3f4f6; }
         .zalo-emerald { background-color: #10b981; }
         .text-zalo-emerald { color: #10b981; }
         .border-zalo-emerald { border-color: #10b981; }
-        
-        /* Login Screen Specific Styles */
-        #login-screen {
-            background: linear-gradient(to bottom, #0b1528, #16243d);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .logo-container {
-            width: 280px;
-            margin-bottom: 40px;
-            animation: fadeInDown 1s ease-out;
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .btn-primary {
-            background: transparent;
-            border: 2px solid #1e293b;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-weight: bold;
-            width: 100%;
-            max-width: 320px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .btn-primary:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: #10b981;
-        }
-        .input-field {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 12px 15px;
-            width: 100%;
-            max-width: 320px;
-            color: white;
-            margin-bottom: 15px;
-            outline: none;
-        }
-        .input-field:focus {
-            border-color: #10b981;
-        }
+        .btn-primary { border: 2px solid #1e293b; color: white; padding: 12px 30px; border-radius: 12px; font-weight: bold; width: 100%; max-width: 320px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-primary:hover { background: rgba(255,255,255,0.05); border-color: #10b981; }
+        .input-field { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 15px; width: 100%; max-width: 320px; color: white; margin-bottom: 15px; outline: none; }
+        .input-field:focus { border-color: #10b981; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Screen: Login (Initial) -->
-    <div id="login-screen">
+    <!-- Login Screen -->
+    <div id="login-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
         <div class="text-center mb-8">
             <h1 class="text-2xl font-bold text-white">ZaLo <span class="text-zalo-emerald">Smart</span></h1>
-            <p class="text-xs text-gray-400">سوق الجزائر الذكي متعدد البائعين</p>
+            <p class="text-xs text-gray-400">سوق الجزائر الذكي</p>
         </div>
-
-        <div class="logo-container text-center">
-            <!-- App Logo Placeholder based on user image -->
-            <div class="relative inline-block">
-                <div class="w-48 h-48 bg-zalo-emerald/20 rounded-full flex items-center justify-center border-4 border-zalo-emerald/30 shadow-2xl shadow-zalo-emerald/20">
-                    <img src="https://i.ibb.co/VWVvK6N/zalo-logo.png" alt="ZaLo Logo" class="w-40 h-40 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3081/3081559.png'">
-                </div>
+        <div class="text-center mb-10">
+            <div class="w-48 h-48 bg-zalo-emerald/20 rounded-full flex items-center justify-center border-4 border-zalo-emerald/30 shadow-2xl shadow-zalo-emerald/20">
+                <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo" class="w-32 h-32 object-contain">
             </div>
             <h2 class="mt-6 text-3xl font-black text-white">ZaLo</h2>
             <p class="text-zalo-emerald font-bold">(السوق الذكي)</p>
         </div>
-
-        <!-- Login Form -->
-        <div id="login-form" class="w-full max-width-320 flex flex-col items-center">
+        <div class="w-full flex flex-col items-center">
             <input type="email" id="login-email" placeholder="البريد الإلكتروني" class="input-field">
             <input type="password" id="login-password" placeholder="كلمة المرور" class="input-field">
-            
             <button onclick="handleLogin()" class="btn-primary mt-4">
-                <i class="fas fa-lock text-zalo-emerald"></i>
-                ابدأ التسوق الآمن
+                <i class="fas fa-lock text-zalo-emerald"></i> ابدأ التسوق الآمن
             </button>
-            
             <p id="login-error" class="text-red-500 text-sm mt-4 hidden"></p>
-        </div>
-        
-        <div class="mt-12 text-gray-500 text-xs flex gap-4">
-            <span><i class="fas fa-shield-halved mr-1"></i> مدير النظام</span>
-            <span><i class="fas fa-store mr-1"></i> تاجر محترف</span>
-            <span><i class="fas fa-user mr-1"></i> مستهلك</span>
         </div>
     </div>
 
-    <!-- Main App Container (Hidden by default) -->
-    <div id="main-app" class="hidden">
-        <!-- Navigation Top Bar -->
-        <nav class="bg-[#0b1528] border-b border-white/5 sticky top-0 z-50 px-4 py-3">
-            <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- Main App Container -->
+    <div id="main-app" class="hidden min-h-screen flex flex-col">
+        <!-- Top Nav -->
+        <nav class="bg-[#0b1528] border-b border-white/5 p-4 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="bg-zalo-emerald p-1.5 rounded-lg">
-                        <i class="fas fa-seedling text-white text-sm"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-lg font-bold leading-tight">ZaLo <span class="text-zalo-emerald">Smart</span></h1>
-                        <p class="text-[10px] text-gray-400">سوق الجزائر الذكي</p>
-                    </div>
+                    <div class="zalo-emerald p-2 rounded-lg"><i class="fas fa-seedling text-white"></i></div>
+                    <div><h1 class="font-bold">ZaLo Smart</h1><p class="text-[10px] text-gray-400">سوق الجزائر الذكي</p></div>
                 </div>
-                
-                <div class="flex items-center gap-4">
-                    <button onclick="handleLogout()" class="text-gray-400 hover:text-white transition-colors">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
+                <div class="flex gap-2">
+                    <button onclick="switchTab('customer')" id="tab-customer" class="px-3 py-1.5 rounded-full text-xs font-bold bg-zalo-emerald text-white">مستهلك</button>
+                    <button onclick="switchTab('merchant')" id="tab-merchant" class="px-3 py-1.5 rounded-full text-xs font-bold text-gray-400">تاجر</button>
+                    <button onclick="switchTab('admin')" id="tab-admin" class="px-3 py-1.5 rounded-full text-xs font-bold text-gray-400">مدير</button>
+                    <button onclick="handleLogout()" class="px-3 py-1.5 rounded-full text-xs font-bold text-red-400"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
         </nav>
 
-        <!-- Content Area -->
-        <main id="app-content" class="p-4">
-            <!-- Dynamic content will be injected here by app.js -->
+        <!-- Main Content -->
+        <main id="app-content" class="flex-grow p-4 max-w-7xl mx-auto w-full">
+            <!-- Content will be injected here -->
         </main>
     </div>
 
