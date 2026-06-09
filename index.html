@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZaLo Smart - السوق الجزائري الذكي</title>
+    <title>ZaLo Market - السوق الذكي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -34,64 +34,150 @@
     </script>
 
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #0b1528; color: #f3f4f6; }
-        .zalo-emerald { background-color: #10b981; }
-        .text-zalo-emerald { color: #10b981; }
-        .border-zalo-emerald { border-color: #10b981; }
-        .btn-primary { border: 2px solid #1e293b; color: white; padding: 12px 30px; border-radius: 12px; font-weight: bold; width: 100%; max-width: 320px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-primary:hover { background: rgba(255,255,255,0.05); border-color: #10b981; }
-        .input-field { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 15px; width: 100%; max-width: 320px; color: white; margin-bottom: 15px; outline: none; }
-        .input-field:focus { border-color: #10b981; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8f9fa; color: #333; margin: 0; padding: 0; }
+        .dark-bg { background-color: #000000; color: #ffffff; }
+        .gold-text { color: #d4af37; }
+        .gold-bg { background-color: #d4af37; color: #000; }
+        .gold-border { border: 1px solid #d4af37; }
+        .zalo-card { background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 15px; padding: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .btn-gold-outline { border: 2px solid #d4af37; color: #d4af37; border-radius: 25px; padding: 10px 40px; font-weight: bold; width: 80%; margin-bottom: 10px; text-align: center; }
+        .btn-gold-fill { background-color: #d4af37; color: #000; border-radius: 25px; padding: 10px 40px; font-weight: bold; width: 80%; margin-bottom: 10px; text-align: center; }
         .hidden { display: none; }
+        .screen { min-height: 100vh; width: 100%; max-width: 500px; margin: 0 auto; position: relative; }
+        .top-logo { width: 80px; margin: 20px auto; }
+        .back-btn { position: absolute; top: 20px; right: 20px; font-size: 20px; }
+        .menu-btn { position: absolute; top: 20px; left: 20px; font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- Login Screen -->
-    <div id="login-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-white">ZaLo <span class="text-zalo-emerald">Smart</span></h1>
-            <p class="text-xs text-gray-400">سوق الجزائر الذكي</p>
-        </div>
+    <!-- 1. واجهة تسجيل الدخول والتطبيق -->
+    <div id="screen-login" class="screen dark-bg flex flex-col items-center justify-center p-6">
         <div class="text-center mb-10">
-            <div class="w-48 h-48 bg-zalo-emerald/20 rounded-full flex items-center justify-center border-4 border-zalo-emerald/30 shadow-2xl shadow-zalo-emerald/20">
-                <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo" class="w-32 h-32 object-contain">
-            </div>
-            <h2 class="mt-6 text-3xl font-black text-white">ZaLo</h2>
-            <p class="text-zalo-emerald font-bold">(السوق الذكي)</p>
+            <img src="https://i.ibb.co/VWVvK6N/zalo-logo.png" alt="ZaLo Logo" class="w-48 mx-auto" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3081/3081559.png'">
+            <h1 class="text-4xl font-bold mt-4 gold-text">ZaLo Market</h1>
+            <p class="text-xl gold-text">السوق الذكي</p>
         </div>
-        <div class="w-full flex flex-col items-center">
-            <input type="email" id="login-email" placeholder="البريد الإلكتروني" class="input-field">
-            <input type="password" id="login-password" placeholder="كلمة المرور" class="input-field">
-            <button onclick="handleLogin()" class="btn-primary mt-4">
-                <i class="fas fa-lock text-zalo-emerald"></i> ابدأ التسوق الآمن
-            </button>
-            <p id="login-error" class="text-red-500 text-sm mt-4 hidden"></p>
+        <button onclick="showScreen('screen-municipalities')" class="btn-gold-outline">تسجيل حساب</button>
+        <button onclick="showScreen('screen-municipalities')" class="btn-gold-fill">تسوق الآن</button>
+    </div>
+
+    <!-- 2. قائمة البلديات المتاحة -->
+    <div id="screen-municipalities" class="screen hidden bg-white p-4">
+        <i class="fas fa-ellipsis-v menu-btn"></i>
+        <img src="https://i.ibb.co/VWVvK6N/zalo-logo.png" alt="Logo" class="top-logo">
+        <h2 class="text-center text-2xl font-bold mb-6">قائمة البلديات المتاحة</h2>
+        <div class="space-y-4">
+            <div onclick="showScreen('screen-stores')" class="zalo-card cursor-pointer">
+                <span class="text-xl font-bold">بلدية المنيعة</span>
+                <i class="fas fa-building text-2xl"></i>
+            </div>
+            <div class="zalo-card text-gray-400">
+                <span class="text-xl font-bold">بلدية حاسي الفحل</span>
+            </div>
+            <div class="zalo-card text-gray-400">
+                <span class="text-xl font-bold">بلدية القارة</span>
+            </div>
         </div>
     </div>
 
-    <!-- Main App Container -->
-    <div id="main-app" class="hidden min-h-screen flex flex-col">
-        <!-- Top Nav -->
-        <nav class="bg-[#0b1528] border-b border-white/5 p-4 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="zalo-emerald p-2 rounded-lg"><i class="fas fa-seedling text-white"></i></div>
-                    <div><h1 class="font-bold">ZaLo Smart</h1><p class="text-[10px] text-gray-400">سوق الجزائر الذكي</p></div>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="switchTab('customer')" id="tab-customer" class="px-3 py-1.5 rounded-full text-xs font-bold bg-zalo-emerald text-white">مستهلك</button>
-                    <button onclick="switchTab('merchant')" id="tab-merchant" class="px-3 py-1.5 rounded-full text-xs font-bold text-gray-400">تاجر</button>
-                    <button onclick="switchTab('admin')" id="tab-admin" class="px-3 py-1.5 rounded-full text-xs font-bold text-gray-400">مدير</button>
-                    <button onclick="handleLogout()" class="px-3 py-1.5 rounded-full text-xs font-bold text-red-400"><i class="fas fa-sign-out-alt"></i></button>
+    <!-- 3. قائمة المتاجر في بلدية المنيعة -->
+    <div id="screen-stores" class="screen hidden bg-white p-4">
+        <i class="fas fa-ellipsis-v menu-btn"></i>
+        <img src="https://i.ibb.co/VWVvK6N/zalo-logo.png" alt="Logo" class="top-logo">
+        <h2 class="text-center text-2xl font-bold mb-6">بلدية المنيعة</h2>
+        <div class="space-y-4">
+            <div onclick="showScreen('screen-categories')" class="zalo-card cursor-pointer">
+                <span class="text-xl font-bold">متجر السلام</span>
+                <i class="fas fa-store text-2xl"></i>
+            </div>
+            <div class="zalo-card">
+                <span class="text-xl font-bold">متجر النور</span>
+                <i class="fas fa-store text-2xl"></i>
+            </div>
+            <div class="zalo-card">
+                <span class="text-xl font-bold">متجر الواحة</span>
+                <i class="fas fa-store text-2xl"></i>
+            </div>
+            <div class="zalo-card">
+                <span class="text-xl font-bold">متجر الصحراء</span>
+                <i class="fas fa-store text-2xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. قائمة الفئات في متجر السلام -->
+    <div id="screen-categories" class="screen hidden bg-white p-4">
+        <i class="fas fa-ellipsis-v menu-btn"></i>
+        <img src="https://i.ibb.co/VWVvK6N/zalo-logo.png" alt="Logo" class="top-logo">
+        <h2 class="text-center text-2xl font-bold mb-6">متجر السلام</h2>
+        <div class="space-y-4">
+            <div onclick="showScreen('screen-products')" class="zalo-card cursor-pointer">
+                <span class="text-xl font-bold">الهواتف</span>
+                <i class="fas fa-mobile-alt text-2xl"></i>
+            </div>
+            <div class="zalo-card">
+                <span class="text-xl font-bold">قطع الغيار</span>
+                <i class="fas fa-tools text-2xl"></i>
+            </div>
+            <div class="zalo-card">
+                <span class="text-xl font-bold">الدراجات</span>
+                <i class="fas fa-bicycle text-2xl"></i>
+            </div>
+            <div class="zalo-card">
+                <span class="text-xl font-bold">الملابس</span>
+                <i class="fas fa-tshirt text-2xl"></i>
+            </div>
+            <div class="zalo-card">
+                <span class="text-xl font-bold">المنزل</span>
+                <i class="fas fa-home text-2xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. اختيار الهواتف الذكية -->
+    <div id="screen-products" class="screen hidden bg-white p-4">
+        <i class="fas fa-ellipsis-v menu-btn"></i>
+        <img src="https://i.ibb.co/VWVvK6N/zalo-logo.png" alt="Logo" class="top-logo">
+        <h2 class="text-center text-2xl font-bold mb-6">الهواتف</h2>
+        <div class="grid grid-cols-1 gap-6">
+            <div onclick="showScreen('screen-product-detail')" class="bg-white rounded-2xl shadow-lg p-4 border border-gray-100 cursor-pointer">
+                <img src="https://via.placeholder.com/300x200" alt="Galaxy A07" class="w-full h-48 object-contain mb-4">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold">Galaxy A07</h3>
+                    <p class="text-gray-600">22,000 دج</p>
                 </div>
             </div>
-        </nav>
+            <div class="bg-white rounded-2xl shadow-lg p-4 border border-gray-100">
+                <img src="https://via.placeholder.com/300x200" alt="Honor X6C" class="w-full h-48 object-contain mb-4">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold">Honor X6C</h3>
+                    <p class="text-gray-600">29,000 دج</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Main Content -->
-        <main id="app-content" class="flex-grow p-4 max-w-7xl mx-auto w-full">
-            <!-- Content will be injected here -->
-        </main>
+    <!-- 6. تفاصيل هاتف Galaxy -->
+    <div id="screen-product-detail" class="screen hidden bg-white p-0">
+        <div class="p-4 flex justify-between items-center">
+            <i class="fas fa-ellipsis-v"></i>
+            <i class="fas fa-arrow-left" onclick="showScreen('screen-products')"></i>
+        </div>
+        <div class="bg-gray-100 p-8 flex justify-center">
+            <img src="https://via.placeholder.com/300x400" alt="Galaxy A07" class="h-64 object-contain">
+        </div>
+        <div class="p-6">
+            <h2 class="text-3xl font-bold mb-2">Galaxy A07</h2>
+            <p class="text-2xl text-gray-800 mb-4">22,000 دج</p>
+            <p class="text-gray-600 leading-relaxed mb-8">
+                هاتف سامسونج جالاكسي A07 الجديد، يتميز بشاشة رائعة وبطارية تدوم طويلاً، مثالي للاستخدام اليومي والتصوير.
+            </p>
+            <div class="flex gap-4">
+                <button class="flex-grow bg-black text-white py-4 rounded-xl font-bold">اطلب الآن</button>
+                <button class="flex-grow border-2 border-black py-4 rounded-xl font-bold">تواصل مع التاجر</button>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
