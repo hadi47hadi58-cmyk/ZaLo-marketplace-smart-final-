@@ -16,17 +16,31 @@ function showScreen(screenId) {
     }
 }
 
-// Initial state
+// Initial state and event listeners
 window.addEventListener('load', () => {
     // We start at the login screen
     showScreen('screen-login');
+
+    // تفعيل أزرار الطلب والتواصل
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        if (btn.innerText.includes('اطلب الآن')) {
+            alert('شكراً لطلبك! سيتم توجيهك لإتمام عملية الدفع وتأكيد الطلب.');
+        }
+        
+        if (btn.innerText.includes('تواصل مع التاجر')) {
+            alert('جاري فتح محادثة مباشرة مع التاجر عبر واتساب...');
+            window.open('https://wa.me/213000000000', '_blank');
+        }
+    });
 });
 
 // Global exports for HTML onclicks
 window.showScreen = showScreen;
 
-// Firebase integration placeholder (to be expanded for dynamic data)
+// Firebase integration placeholder
 async function loadRealData() {
     // This will be used to pull real municipalities, stores, and products from Firestore
-    // For now, the UI navigation is the priority to match the 100% design requirement
 }

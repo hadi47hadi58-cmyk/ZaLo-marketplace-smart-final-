@@ -115,15 +115,14 @@
     <div id="screen-login" class="screen dark-theme flex flex-col items-center justify-center p-8">
         <div class="text-center mb-12">
             <div class="relative">
-                <img src="logo.png?v=1.1" alt="ZaLo Logo" class="w-64 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]">
+                <img src="clean_logo.png" alt="ZaLo Logo" class="w-64 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]">
             </div>
             <h1 class="text-5xl font-black gold-gradient-text tracking-tighter">ZaLo Market</h1>
             <p class="text-2xl font-bold mt-2 text-white opacity-80">السوق الذكي</p>
         </div>
         
         <div class="w-full flex flex-col items-center mt-8">
-            <button onclick="showScreen('screen-municipalities')" class="btn-premium-outline">تسجيل حساب</button>
-            <button onclick="showScreen('screen-municipalities')" class="btn-premium-fill">تسوق الآن</button>
+            <button onclick="showScreen('screen-municipalities')" class="btn-premium-fill mt-8">تسوق الآن</button>
         </div>
         
         <div class="absolute bottom-10 flex gap-2">
@@ -136,8 +135,15 @@
     <!-- 2. قائمة البلديات المتاحة -->
     <div id="screen-municipalities" class="screen hidden bg-[#f8f9fa] p-6">
         <div class="nav-header">
-            <i class="fas fa-ellipsis-v text-xl"></i>
-            <img src="logo.png?v=1.1" class="logo-small">
+            <div class="relative group cursor-pointer">
+                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
+                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
+                </div>
+            </div>
+            <img src="clean_logo.png" class="logo-small">
         </div>
         <h2 class="screen-title mt-4">قائمة البلديات المتاحة</h2>
         <div class="space-y-4 mt-8">
@@ -159,8 +165,15 @@
     <!-- 3. قائمة المتاجر في بلدية المنيعة -->
     <div id="screen-stores" class="screen hidden bg-[#f8f9fa] p-6">
         <div class="nav-header">
-            <i class="fas fa-ellipsis-v text-xl"></i>
-            <img src="logo.png?v=1.1" class="logo-small">
+            <div class="relative group cursor-pointer">
+                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
+                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
+                </div>
+            </div>
+            <img src="clean_logo.png" class="logo-small">
         </div>
         <h2 class="screen-title mt-4">بلدية المنيعة</h2>
         <div class="space-y-4 mt-8">
@@ -182,8 +195,15 @@
     <!-- 4. قائمة الفئات في متجر السلام -->
     <div id="screen-categories" class="screen hidden bg-[#f8f9fa] p-6">
         <div class="nav-header">
-            <i class="fas fa-ellipsis-v text-xl"></i>
-            <img src="logo.png?v=1.1" class="logo-small">
+            <div class="relative group cursor-pointer">
+                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
+                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
+                </div>
+            </div>
+            <img src="clean_logo.png" class="logo-small">
         </div>
         <h2 class="screen-title mt-4">متجر السلام</h2>
         <div class="space-y-4 mt-8">
@@ -205,8 +225,15 @@
     <!-- 5. اختيار الهواتف الذكية -->
     <div id="screen-products" class="screen hidden bg-[#f8f9fa] p-6">
         <div class="nav-header">
-            <i class="fas fa-ellipsis-v text-xl"></i>
-            <img src="logo.png?v=1.1" class="logo-small">
+            <div class="relative group cursor-pointer">
+                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
+                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
+                </div>
+            </div>
+            <img src="clean_logo.png" class="logo-small">
         </div>
         <h2 class="screen-title mt-4">الهواتف</h2>
         <div class="grid grid-cols-1 gap-8 mt-6">
@@ -230,7 +257,14 @@
     <!-- 6. تفاصيل هاتف Galaxy -->
     <div id="screen-product-detail" class="screen hidden bg-white">
         <div class="p-6 flex justify-between items-center absolute top-0 w-full z-10">
-            <i class="fas fa-ellipsis-v text-xl"></i>
+            <div class="relative group cursor-pointer">
+                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
+                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
+                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
+                </div>
+            </div>
             <i class="fas fa-arrow-left text-xl" onclick="showScreen('screen-products')"></i>
         </div>
         <div class="bg-gradient-to-b from-gray-100 to-white pt-20 pb-10 px-10 flex justify-center">
