@@ -279,12 +279,31 @@
                 هاتف سامسونج جالاكسي A07 الجديد، يتميز بشاشة رائعة وبطارية تدوم طويلاً، مثالي للاستخدام اليومي والتصوير الاحترافي في الجزائر.
             </p>
             <div class="flex gap-4">
-                <button class="flex-grow bg-black text-white py-5 rounded-2xl font-black text-xl shadow-xl">اطلب الآن</button>
-                <button class="flex-grow border-2 border-black py-5 rounded-2xl font-black text-xl">تواصل مع التاجر</button>
+                <button onclick="openOrderModal('Galaxy A07', '22,000')" class="flex-grow bg-black text-white py-5 rounded-2xl font-black text-xl shadow-xl">اطلب الآن</button>
+                <button onclick="contactMerchant('Galaxy A07')" class="flex-grow border-2 border-black py-5 rounded-2xl font-black text-xl">تواصل مع التاجر</button>
             </div>
         </div>
     </div>
 
     <script src="app.js?v=1.1"></script>
+    <!-- نموذج الطلب (Order Modal) -->
+    <div id="order-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-md rounded-[30px] p-8">
+            <h3 class="text-3xl font-black text-gray-900 mb-6 text-center">تأكيد الطلب</h3>
+            <div id="order-product-info" class="bg-gray-50 p-4 rounded-2xl mb-6 text-center">
+                <p class="text-xl font-bold text-gray-800" id="modal-product-name"></p>
+                <p class="text-lg font-black text-gold-primary" id="modal-product-price"></p>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="customer-name" placeholder="الاسم الكامل" class="w-full p-4 bg-gray-100 rounded-xl border-none focus:ring-2 focus:ring-gold-primary outline-none font-bold">
+                <input type="tel" id="customer-phone" placeholder="رقم الهاتف" class="w-full p-4 bg-gray-100 rounded-xl border-none focus:ring-2 focus:ring-gold-primary outline-none font-bold">
+                <textarea id="customer-address" placeholder="العنوان بالتفصيل" class="w-full p-4 bg-gray-100 rounded-xl border-none focus:ring-2 focus:ring-gold-primary outline-none font-bold h-24"></textarea>
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button onclick="submitOrder()" class="flex-grow bg-black text-white py-4 rounded-xl font-black text-lg">تأكيد الشراء</button>
+                <button onclick="closeOrderModal()" class="flex-grow border-2 border-gray-200 py-4 rounded-xl font-black text-lg text-gray-500">إلغاء</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
