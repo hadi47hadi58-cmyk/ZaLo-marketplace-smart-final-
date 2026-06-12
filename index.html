@@ -10,7 +10,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -29,7 +29,7 @@
 
         window.firebaseDB = db;
         window.firebaseAuth = auth;
-        window.firestoreTools = { collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc };
+        window.firestoreTools = { collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc, orderBy };
         window.firebaseAuthTools = { onAuthStateChanged, signInWithEmailAndPassword, signOut };
     </script>
 
@@ -43,7 +43,6 @@
         }
         body { font-family: 'Tajawal', sans-serif; background-color: var(--white-bg); color: #333; margin: 0; padding: 0; }
         
-        /* Gold Gradient Text & Backgrounds */
         .gold-gradient-text {
             background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             -webkit-background-clip: text;
@@ -53,23 +52,8 @@
             background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
         }
         
-        /* Dark Theme for Splash/Login */
         .dark-theme { background-color: var(--deep-black); color: white; }
         
-        /* Premium Buttons */
-        .btn-premium-outline {
-            border: 2px solid #d4af37;
-            color: #d4af37;
-            border-radius: 30px;
-            padding: 12px 50px;
-            font-weight: 900;
-            width: 85%;
-            margin-bottom: 15px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
         .btn-premium-fill {
             background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728);
             color: #000;
@@ -83,7 +67,6 @@
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
 
-        /* Card Styling to match image */
         .premium-card {
             background: white;
             border-radius: 20px;
@@ -99,14 +82,16 @@
         .premium-card:active { transform: scale(0.98); }
         
         .hidden { display: none; }
-        .screen { min-height: 100vh; width: 100%; max-width: 450px; margin: 0 auto; position: relative; overflow-x: hidden; }
+        .screen { min-height: 100vh; width: 100%; max-width: 450px; margin: 0 auto; position: relative; }
         
-        /* Top Navigation */
         .nav-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         .logo-small { width: 60px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
         
-        /* Typography */
         .screen-title { text-align: center; font-size: 24px; font-weight: 900; margin-bottom: 30px; color: #1a1a1a; }
+
+        /* PIN Code Styling */
+        .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--gold-primary); }
+        .pin-dot.active { background-color: var(--gold-primary); }
     </style>
 </head>
 <body>
@@ -115,7 +100,7 @@
     <div id="screen-login" class="screen dark-theme flex flex-col items-center justify-center p-8">
         <div class="text-center mb-12">
             <div class="relative">
-                <img src="clean_logo.png" alt="ZaLo Logo" class="w-64 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]">
+                <img id="main-logo" src="" alt="ZaLo Logo" class="w-64 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]">
             </div>
             <h1 class="text-5xl font-black gold-gradient-text tracking-tighter">ZaLo Market</h1>
             <p class="text-2xl font-bold mt-2 text-white opacity-80">السوق الذكي</p>
@@ -136,14 +121,13 @@
     <div id="screen-municipalities" class="screen hidden bg-[#f8f9fa] p-6">
         <div class="nav-header">
             <div class="relative group cursor-pointer">
-                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
-                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
+                <i class="fas fa-ellipsis-v text-xl text-gray-800" onclick="toggleMenu()"></i>
+                <div id="menu-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50">
+                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="showScreen('screen-login')">تسجيل حساب</div>
+                    <div class="p-3 hover:bg-red-50 text-red-600 font-black rounded-b-xl" onclick="openPinModal()">المدير العام</div>
                 </div>
             </div>
-            <img src="clean_logo.png" class="logo-small">
+            <img src="" class="logo-small main-logo-small">
         </div>
         <h2 class="screen-title mt-4">قائمة البلديات المتاحة</h2>
         <div class="space-y-4 mt-8">
@@ -155,155 +139,144 @@
                 <span class="text-2xl font-black text-gray-800">بلدية حاسي الفحل</span>
                 <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-map-marker-alt text-2xl text-gray-400"></i></div>
             </div>
-            <div class="premium-card opacity-60">
-                <span class="text-2xl font-black text-gray-800">بلدية القارة</span>
-                <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-map-marker-alt text-2xl text-gray-400"></i></div>
+        </div>
+    </div>
+
+    <!-- واجهة الرمز السري (PIN Modal) -->
+    <div id="pin-modal" class="hidden fixed inset-0 bg-black bg-opacity-95 z-[60] flex items-center justify-center p-6">
+        <div class="w-full max-w-sm text-center">
+            <div class="mb-10">
+                <div class="w-20 h-20 bg-gold-primary rounded-full mx-auto flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(212,175,55,0.5)]">
+                    <i class="fas fa-lock text-black text-3xl"></i>
+                </div>
+                <h2 class="text-white text-2xl font-black">نظام الوصول الآمن</h2>
+                <p class="text-gray-400 mt-2">أدخل الرمز السري للمدير</p>
+            </div>
+            <div class="flex justify-center gap-4 mb-10">
+                <div class="pin-dot" id="dot-0"></div>
+                <div class="pin-dot" id="dot-1"></div>
+                <div class="pin-dot" id="dot-2"></div>
+                <div class="pin-dot" id="dot-3"></div>
+                <div class="pin-dot" id="dot-4"></div>
+                <div class="pin-dot" id="dot-5"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 max-w-[280px] mx-auto">
+                <button onclick="pressKey(1)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">1</button>
+                <button onclick="pressKey(2)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">2</button>
+                <button onclick="pressKey(3)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">3</button>
+                <button onclick="pressKey(4)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">4</button>
+                <button onclick="pressKey(5)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">5</button>
+                <button onclick="pressKey(6)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">6</button>
+                <button onclick="pressKey(7)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">7</button>
+                <button onclick="pressKey(8)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">8</button>
+                <button onclick="pressKey(9)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">9</button>
+                <button onclick="clearPin()" class="w-16 h-16 rounded-full bg-red-500 bg-opacity-20 text-red-500 text-xl font-bold">C</button>
+                <button onclick="pressKey(0)" class="w-16 h-16 rounded-full bg-white bg-opacity-10 text-white text-2xl font-bold">0</button>
+                <button onclick="closePinModal()" class="w-16 h-16 rounded-full bg-gray-500 bg-opacity-20 text-gray-400 text-xl font-bold">X</button>
             </div>
         </div>
     </div>
 
-    <!-- 3. قائمة المتاجر في بلدية المنيعة -->
+    <!-- شاشة دخول المدير -->
+    <div id="screen-admin-login" class="screen hidden dark-theme flex flex-col items-center justify-center p-8">
+        <div class="w-full max-w-md bg-white rounded-[40px] p-10 shadow-2xl text-center">
+            <h2 class="text-3xl font-black text-gray-900 mb-2">دخول المدير</h2>
+            <p class="text-gray-500 mb-8 font-bold">يرجى تأكيد الهوية</p>
+            <div class="space-y-6">
+                <input type="email" id="admin-email" placeholder="البريد الإلكتروني" class="w-full p-4 bg-gray-50 rounded-2xl border-2 border-gray-100 focus:border-gold-primary outline-none font-bold text-gray-900">
+                <input type="password" id="admin-password" placeholder="كلمة المرور" class="w-full p-4 bg-gray-50 rounded-2xl border-2 border-gray-100 focus:border-gold-primary outline-none font-bold text-gray-900">
+                <button onclick="handleAdminLogin()" class="w-full bg-black text-white py-5 rounded-2xl font-black text-xl shadow-xl">دخول اللوحة</button>
+                <button onclick="showScreen('screen-login')" class="w-full text-gray-400 font-bold">العودة للرئيسية</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- لوحة تحكم المدير -->
+    <div id="screen-admin-dashboard" class="screen hidden bg-gray-50">
+        <header class="bg-black text-white p-6 rounded-b-[40px] shadow-2xl mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-2xl font-black text-gold-primary">لوحة التحكم</h1>
+                    <p class="text-gray-400 text-sm">أهلاً بك، المدير العام</p>
+                </div>
+                <button onclick="handleAdminLogout()" class="bg-red-500 bg-opacity-20 text-red-500 p-3 rounded-xl"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white bg-opacity-10 p-4 rounded-2xl text-center">
+                    <p class="text-xs text-gray-400 mb-1">إجمالي الطلبات</p>
+                    <p id="stat-orders" class="text-2xl font-black">0</p>
+                </div>
+                <div class="bg-white bg-opacity-10 p-4 rounded-2xl text-center">
+                    <p class="text-xs text-gray-400 mb-1">حالة النظام</p>
+                    <p class="text-green-400 text-sm font-bold">متصل</p>
+                </div>
+            </div>
+        </header>
+        <div class="px-6">
+            <h3 class="text-xl font-black text-gray-900 mb-4">أحدث الطلبات</h3>
+            <div id="orders-list" class="space-y-4">
+                <!-- الطلبات تظهر هنا -->
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشات المتاجر والمنتجات (مختصرة للمساحة) -->
     <div id="screen-stores" class="screen hidden bg-[#f8f9fa] p-6">
         <div class="nav-header">
-            <div class="relative group cursor-pointer">
-                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
-                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
-                </div>
-            </div>
-            <img src="clean_logo.png" class="logo-small">
+            <i class="fas fa-arrow-right text-xl" onclick="showScreen('screen-municipalities')"></i>
+            <img src="" class="logo-small main-logo-small">
         </div>
-        <h2 class="screen-title mt-4">بلدية المنيعة</h2>
-        <div class="space-y-4 mt-8">
-            <div onclick="showScreen('screen-categories')" class="premium-card">
-                <span class="text-2xl font-black text-gray-800">متجر السلام</span>
-                <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-store text-2xl text-gray-700"></i></div>
-            </div>
-            <div class="premium-card">
-                <span class="text-2xl font-black text-gray-800">متجر النور</span>
-                <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-store text-2xl text-gray-700"></i></div>
-            </div>
-            <div class="premium-card">
-                <span class="text-2xl font-black text-gray-800">متجر الواحة</span>
-                <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-store text-2xl text-gray-700"></i></div>
-            </div>
+        <h2 class="screen-title">متجر السلام</h2>
+        <div class="premium-card" onclick="showScreen('screen-products')">
+            <span class="text-2xl font-black text-gray-800">الهواتف</span>
+            <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-mobile-alt text-2xl text-gray-700"></i></div>
         </div>
     </div>
 
-    <!-- 4. قائمة الفئات في متجر السلام -->
-    <div id="screen-categories" class="screen hidden bg-[#f8f9fa] p-6">
-        <div class="nav-header">
-            <div class="relative group cursor-pointer">
-                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
-                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
-                </div>
-            </div>
-            <img src="clean_logo.png" class="logo-small">
-        </div>
-        <h2 class="screen-title mt-4">متجر السلام</h2>
-        <div class="space-y-4 mt-8">
-            <div onclick="showScreen('screen-products')" class="premium-card">
-                <span class="text-2xl font-black text-gray-800">الهواتف</span>
-                <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-mobile-alt text-2xl text-gray-700"></i></div>
-            </div>
-            <div class="premium-card">
-                <span class="text-2xl font-black text-gray-800">قطع الغيار</span>
-                <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-tools text-2xl text-gray-700"></i></div>
-            </div>
-            <div class="premium-card">
-                <span class="text-2xl font-black text-gray-800">الدراجات</span>
-                <div class="bg-gray-100 p-3 rounded-xl"><i class="fas fa-bicycle text-2xl text-gray-700"></i></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 5. اختيار الهواتف الذكية -->
     <div id="screen-products" class="screen hidden bg-[#f8f9fa] p-6">
         <div class="nav-header">
-            <div class="relative group cursor-pointer">
-                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
-                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
-                </div>
-            </div>
-            <img src="clean_logo.png" class="logo-small">
+            <i class="fas fa-arrow-right text-xl" onclick="showScreen('screen-stores')"></i>
+            <img src="" class="logo-small main-logo-small">
         </div>
-        <h2 class="screen-title mt-4">الهواتف</h2>
-        <div class="grid grid-cols-1 gap-8 mt-6">
-            <div onclick="showScreen('screen-product-detail')" class="bg-white rounded-[30px] shadow-2xl p-6 border border-gray-100 text-center">
-                <div class="bg-gray-50 rounded-2xl p-4 mb-4">
-                    <img src="https://via.placeholder.com/300x300?text=Galaxy+A07" alt="Galaxy A07" class="w-full h-48 object-contain">
+        <div class="premium-card" onclick="showScreen('screen-product-detail')">
+            <div class="flex items-center gap-4">
+                <div class="w-20 h-20 bg-gray-50 rounded-xl p-2"><img src="https://via.placeholder.com/100" class="w-full h-full object-contain"></div>
+                <div>
+                    <h3 class="font-black text-xl">Galaxy A07</h3>
+                    <p class="text-gold-primary font-bold">22,000 دج</p>
                 </div>
-                <h3 class="text-2xl font-black text-gray-900">Galaxy A07</h3>
-                <p class="text-xl font-bold text-gray-600 mt-1">22,000 دج</p>
-            </div>
-            <div class="bg-white rounded-[30px] shadow-2xl p-6 border border-gray-100 text-center">
-                <div class="bg-gray-50 rounded-2xl p-4 mb-4">
-                    <img src="https://via.placeholder.com/300x300?text=Honor+X6C" alt="Honor X6C" class="w-full h-48 object-contain">
-                </div>
-                <h3 class="text-2xl font-black text-gray-900">Honor X6C</h3>
-                <p class="text-xl font-bold text-gray-600 mt-1">29,000 دج</p>
             </div>
         </div>
     </div>
 
-    <!-- 6. تفاصيل هاتف Galaxy -->
     <div id="screen-product-detail" class="screen hidden bg-white">
         <div class="p-6 flex justify-between items-center absolute top-0 w-full z-10">
-            <div class="relative group cursor-pointer">
-                <i class="fas fa-ellipsis-v text-xl text-gray-800"></i>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block z-50">
-                    <div class="p-3 hover:bg-gray-50 border-b border-gray-50 rounded-t-xl font-bold text-gray-800" onclick="alert('جاري التوجيه لصفحة التسجيل...')">تسجيل حساب</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600">تسجيل الدخول</div>
-                    <div class="p-3 hover:bg-gray-50 text-gray-600 rounded-b-xl">الإعدادات</div>
-                </div>
-            </div>
-            <i class="fas fa-arrow-left text-xl" onclick="showScreen('screen-products')"></i>
+            <i class="fas fa-arrow-right text-xl" onclick="showScreen('screen-products')"></i>
         </div>
-        <div class="bg-gradient-to-b from-gray-100 to-white pt-20 pb-10 px-10 flex justify-center">
-            <img src="https://via.placeholder.com/300x500?text=Galaxy+A07+Large" alt="Galaxy A07" class="h-80 object-contain drop-shadow-2xl">
-        </div>
+        <div class="pt-20 pb-10 px-10 flex justify-center"><img src="https://via.placeholder.com/300" class="h-64 object-contain"></div>
         <div class="p-8">
-            <div class="flex justify-between items-start mb-4">
-                <h2 class="text-4xl font-black text-gray-900">Galaxy A07</h2>
-                <span class="text-2xl font-black text-gray-800">22,000 دج</span>
-            </div>
-            <p class="text-gray-500 text-lg leading-relaxed mb-10 font-medium">
-                هاتف سامسونج جالاكسي A07 الجديد، يتميز بشاشة رائعة وبطارية تدوم طويلاً، مثالي للاستخدام اليومي والتصوير الاحترافي في الجزائر.
-            </p>
+            <h2 class="text-4xl font-black text-gray-900 mb-2">Galaxy A07</h2>
+            <p class="text-3xl font-black text-gold-primary mb-6">22,000 دج</p>
             <div class="flex gap-4">
-                <button onclick="openOrderModal('Galaxy A07', '22,000')" class="flex-grow bg-black text-white py-5 rounded-2xl font-black text-xl shadow-xl">اطلب الآن</button>
-                <button onclick="contactMerchant('Galaxy A07')" class="flex-grow border-2 border-black py-5 rounded-2xl font-black text-xl">تواصل مع التاجر</button>
+                <button onclick="openOrderModal('Galaxy A07', '22,000')" class="flex-grow bg-black text-white py-5 rounded-2xl font-black text-xl">اطلب الآن</button>
             </div>
         </div>
     </div>
 
-    <script src="app.js?v=1.1"></script>
-    <!-- نموذج الطلب (Order Modal) -->
+    <!-- نموذج الطلب -->
     <div id="order-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-6">
         <div class="bg-white w-full max-w-md rounded-[30px] p-8">
             <h3 class="text-3xl font-black text-gray-900 mb-6 text-center">تأكيد الطلب</h3>
-            <div id="order-product-info" class="bg-gray-50 p-4 rounded-2xl mb-6 text-center">
-                <p class="text-xl font-bold text-gray-800" id="modal-product-name"></p>
-                <p class="text-lg font-black text-gold-primary" id="modal-product-price"></p>
-            </div>
             <div class="space-y-4">
-                <input type="text" id="customer-name" placeholder="الاسم الكامل" class="w-full p-4 bg-gray-100 rounded-xl border-none focus:ring-2 focus:ring-gold-primary outline-none font-bold">
-                <input type="tel" id="customer-phone" placeholder="رقم الهاتف" class="w-full p-4 bg-gray-100 rounded-xl border-none focus:ring-2 focus:ring-gold-primary outline-none font-bold">
-                <textarea id="customer-address" placeholder="العنوان بالتفصيل" class="w-full p-4 bg-gray-100 rounded-xl border-none focus:ring-2 focus:ring-gold-primary outline-none font-bold h-24"></textarea>
-            </div>
-            <div class="flex gap-4 mt-8">
-                <button onclick="submitOrder()" class="flex-grow bg-black text-white py-4 rounded-xl font-black text-lg">تأكيد الشراء</button>
-                <button onclick="closeOrderModal()" class="flex-grow border-2 border-gray-200 py-4 rounded-xl font-black text-lg text-gray-500">إلغاء</button>
+                <input type="text" id="customer-name" placeholder="الاسم الكامل" class="w-full p-4 bg-gray-100 rounded-xl outline-none font-bold">
+                <input type="tel" id="customer-phone" placeholder="رقم الهاتف" class="w-full p-4 bg-gray-100 rounded-xl outline-none font-bold">
+                <textarea id="customer-address" placeholder="العنوان بالتفصيل" class="w-full p-4 bg-gray-100 rounded-xl outline-none font-bold h-24"></textarea>
+                <button onclick="submitOrder()" class="w-full bg-black text-white py-4 rounded-xl font-black text-lg">تأكيد الشراء</button>
+                <button onclick="closeOrderModal()" class="w-full text-gray-400 font-bold">إلغاء</button>
             </div>
         </div>
     </div>
+
+    <script src="app.js?v=2.0"></script>
 </body>
 </html>
